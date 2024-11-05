@@ -1,0 +1,68 @@
+		/*char tempnum[5];
+		sprintf_s(tempnum,sizeof(tempnum), "%4d", temperature);
+		d_msg("temp %c%c%c%c\n", tempnum[0], tempnum[1], tempnum[2], tempnum[3]);*/
+
+	
+		/* 비교 테스트 용
+		volt[0] += 1;	volt[1] += 2;	volt[2] += 3;	volt[3] += 4;
+		cur[0] += 1;	cur[1] += 2;	cur[2] += 3;	cur[3] += 4;
+		cap[0] += 1;	cap[1] += 2;	cap[2] += 3;	cap[3] += 4;
+		*/
+
+if (canid.id == dev2Set.id) {
+			volt[0] += 1;	volt[1] += 2;	volt[2] += 3;	volt[3] += 4;
+			cur[0] += 1;	cur[1] += 2;	cur[2] += 3;	cur[3] += 4;
+			cap[0] += 1;	cap[1] += 2;	cap[2] += 3;	cap[3] += 4;
+		}
+
+UINT ThreadRecvCAN_Data(LPVOID param)
+{
+	CDisChgTesterDlg* pMain = (CDisChgTesterDlg*)param;
+	while (m_isRecvCANThread)
+	{
+		long id;		
+		int len, ext, rtr;
+		char data[8] = { 0 };		
+		//BOOL Chk_addtime = pMain->IsDlgButtonChecked(IDC_CHECK_ADDTIME);
+		static int rcvCnt = 0, endCnt = 0;
+		static long msgHead[2];		// id , 전체 수신갯수
+		static char msgData[512];	// 전체 수신 데이터.
+		CString strTime, strDebug, strData;
+		int ret = CAN_Recv(hBus, &id, &len, data, &ext, &rtr);
+		if (ret  == 1) 
+		{
+			if (rcvCnt == 0) {   // 첫번째 수신 경우 메세지 초기화.
+				memset(msgHead, 0, sizeof(msgHead));
+				memset(msgData, 0, sizeof(msgData));				
+			}
+			//strDebug.Format(_T("ID: %3X  DLC: %1u  Data:"), id, len);
+
+			for (int i = 0; i < len; i++)
+			{				
+				//strDebug.Format(_T(" %.2X"), (uint8_t)msgData[rcvCnt]);
+				//strDebug.Append(strDebug);
+				msgData[rcvCnt++] = data[i];
+				//rcvCnt++;
+			}
+			msgHead[0] = id;
+			msgHead[1] = rcvCnt;				
+			
+			endCnt = CAN_RCV_CHK_TIMER;  //  수신 대기 타이머..갱신.		
+		}
+		else 
+		{
+			if (rcvCnt > sizeof(msgData) - 1) {	rcvCnt = 0;	endCnt = 0;	}
+
+			if (endCnt) {
+				endCnt--;
+				if (endCnt == 1) {  // 수신데이터 전달..					
+					//pMain->SendMessage(WM_USER_CAN_RCV_ALL_MSG, (WPARAM)msgHead, (LPARAM)msgData); // CAN 전체 수신 완료후 전달.			
+					pMain->PostMessageA(WM_USER_CAN_RCV_ALL_MSG, (WPARAM)msgHead, (LPARAM)msgData); // CAN 전체 수신 완료후 전달.							
+					rcvCnt = 0;
+				}
+			}
+		}
+		Sleep(CAN_RCV_TIME_THR);
+	}
+	return 0;
+}
