@@ -155,6 +155,8 @@
 #define IDC_CHK_16CH                    1081
 #define IDC_BTN_SET                     1082
 #define IDC_CHK_16CH2                   1082
+#define IDC_CHK_ODD                     1083
+#define IDC_CHK_EVEN                    1084
 
 // Next default values for new objects
 // 

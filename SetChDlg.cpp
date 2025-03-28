@@ -31,6 +31,8 @@ BEGIN_MESSAGE_MAP(SetChDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHK_ALLCH1, &SetChDlg::OnBnClickedChkAllch1)
 	ON_BN_CLICKED(IDC_CHK_16CH, &SetChDlg::OnBnClickedChk16ch)
 	ON_BN_CLICKED(IDC_CHK_16CH2, &SetChDlg::OnBnClickedChk16ch2)
+	ON_BN_CLICKED(IDC_CHK_ODD, &SetChDlg::OnBnClickedChkOdd)
+	ON_BN_CLICKED(IDC_CHK_EVEN, &SetChDlg::OnBnClickedChkEven)
 END_MESSAGE_MAP()
 
 
@@ -124,6 +126,9 @@ void SetChDlg::OnBnClickedChk16ch()
 	
 	if(chkChLeft == TRUE && chkChRight == TRUE)	((CButton*)GetDlgItem(IDC_CHK_ALLCH1))->SetCheck(TRUE);
 	else ((CButton*)GetDlgItem(IDC_CHK_ALLCH1))->SetCheck(FALSE);
+
+	((CButton*)GetDlgItem(IDC_CHK_ODD))->SetCheck(FALSE);
+	((CButton*)GetDlgItem(IDC_CHK_EVEN))->SetCheck(FALSE);
 }
 
 
@@ -136,4 +141,55 @@ void SetChDlg::OnBnClickedChk16ch2()
 
 	if (chkChLeft == TRUE && chkChRight == TRUE)	((CButton*)GetDlgItem(IDC_CHK_ALLCH1))->SetCheck(TRUE);
 	else ((CButton*)GetDlgItem(IDC_CHK_ALLCH1))->SetCheck(FALSE);
+
+	((CButton*)GetDlgItem(IDC_CHK_ODD))->SetCheck(FALSE);
+	((CButton*)GetDlgItem(IDC_CHK_EVEN))->SetCheck(FALSE);
+}
+
+
+void SetChDlg::OnBnClickedChkOdd()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	for (int i = 0; i < 16; i++)
+	{
+		if (i % 2)
+		{
+			m_checkList1.SetCheck(i, TRUE);
+			m_checkList2.SetCheck(i, TRUE);
+		}
+		else
+		{
+			m_checkList1.SetCheck(i, FALSE);
+			m_checkList2.SetCheck(i, FALSE);
+		}
+	}
+	
+	((CButton*)GetDlgItem(IDC_CHK_16CH))->SetCheck(FALSE);
+	((CButton*)GetDlgItem(IDC_CHK_16CH2))->SetCheck(FALSE);
+	((CButton*)GetDlgItem(IDC_CHK_ALLCH1))->SetCheck(FALSE);
+	((CButton*)GetDlgItem(IDC_CHK_EVEN))->SetCheck(FALSE);
+}
+
+
+void SetChDlg::OnBnClickedChkEven()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	for (int i = 0; i < 16; i++)
+	{
+		if (i % 2)
+		{
+			m_checkList1.SetCheck(i, FALSE);
+			m_checkList2.SetCheck(i, FALSE);
+		}
+		else
+		{
+			m_checkList1.SetCheck(i, TRUE);
+			m_checkList2.SetCheck(i, TRUE);
+		}
+	}
+
+	((CButton*)GetDlgItem(IDC_CHK_16CH))->SetCheck(FALSE);
+	((CButton*)GetDlgItem(IDC_CHK_16CH2))->SetCheck(FALSE);
+	((CButton*)GetDlgItem(IDC_CHK_ALLCH1))->SetCheck(FALSE);
+	((CButton*)GetDlgItem(IDC_CHK_ODD))->SetCheck(FALSE);
 }

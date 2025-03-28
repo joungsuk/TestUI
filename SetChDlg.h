@@ -36,4 +36,6 @@ public:
 	afx_msg void OnBnClickedChkAllch1();
 	afx_msg void OnBnClickedChk16ch();
 	afx_msg void OnBnClickedChk16ch2();
+	afx_msg void OnBnClickedChkOdd();
+	afx_msg void OnBnClickedChkEven();
 };
